@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { LOCAL_STORAGE_KEYS, MIN_PLAYERS_PER_TEAM, MAX_PLAYERS_PER_TEAM } from "
 import { createClient } from "@/lib/supabase/client";
 import { ArrowLeft, Plus, Trash2, Users, Trophy, AlertCircle, CheckCircle, History } from "lucide-react";
 
-export default function CreateMatchPage() {
+function CreateMatchContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const isCompletedMatch = searchParams.get("type") === "completed";
@@ -457,3 +457,16 @@ export default function CreateMatchPage() {
         </>
     );
 }
+
+export default function CreateMatchPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex-1 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+            </div>
+        }>
+            <CreateMatchContent />
+        </Suspense>
+    );
+}
+
